@@ -1,0 +1,15 @@
+.linkText {
+    display: flex;
+    margin: auto;
+    font-size: 20px;
+    justify-content: center;
+}
+
+.logout img {
+    margin-left: 0.5em;
+}
+
+.logout {
+    float: right;
+    font-size: 20px;
+}
