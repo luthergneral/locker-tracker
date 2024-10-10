@@ -24,7 +24,7 @@ function Navigation() {
           <Nav className="me-auto">
             <div className='linkText'>
               <Nav.Link href="/home">Home</Nav.Link>
-              <Nav.Link href="/usertable">Directory</Nav.Link>
+              <Nav.Link href="/directory">Directory</Nav.Link>
               <Nav.Link href="/locker">Locker</Nav.Link>
             </div>
           </Nav>  
