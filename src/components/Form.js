@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { db } from './firebaseConfig';
-import { doc, updateDoc, deleteDoc, getDocs, getDoc, collection, query, where, addDoc } from 'firebase/firestore';
+import { doc, updateDoc, deleteDoc, getDocs, getDoc, collection, query, where, addDoc, setDoc } from 'firebase/firestore';
 import '../css/form.css';
 
 const Form = () => {
@@ -36,28 +36,42 @@ const Form = () => {
     e.preventDefault();
     try {
       const usersRef = collection(db, 'users');
-      const q = query(usersRef, where('lockerNumber', '==', parseInt(employee.lockerNumber, 10)));
-      const querySnapshot = await getDocs(q);
-
-      if (!querySnapshot.empty) {
+  
+      const lockerQuery = query(usersRef, where('lockerNumber', '==', parseInt(employee.lockerNumber, 10)));
+      const lockerQuerySnapshot = await getDocs(lockerQuery);
+  
+      if (!lockerQuerySnapshot.empty) {
         alert(`Locker number ${employee.lockerNumber} is already occupied. Please choose another locker.`);
         return;
-      } if (!employee.employeeId || !employee.fullName || !employee.fullName || !employee.department || !employee.lockerNumber) {
-        alert("Please fill up the fields to add user.");
+      }
+  
+      const idQuery = query(usersRef, where('__name__', '==', employee.employeeId));
+      const idQuerySnapshot = await getDocs(idQuery);
+  
+      if (!idQuerySnapshot.empty) {
+        alert(`Employee ID ${employee.employeeId} already has a locker.`);
         return;
       }
-
-      const userDoc = doc(db, 'users', employee.employeeId);
-      await addDoc(userDoc, {
+  
+      if (!employee.employeeId || !employee.fullName || !employee.department || !employee.lockerNumber) {
+        alert("Please fill up all fields to add a user.");
+        return;
+      }
+  
+      const userDoc = doc(db, "users", employee.employeeId);
+      await setDoc(userDoc, {
         fullName: employee.fullName,
         email: employee.email,
         department: employee.department,
         lockerNumber: parseInt(employee.lockerNumber, 10),
+        status: employee.status,
       });
+  
       alert('User added successfully!');
       clearForm();
     } catch (error) {
-      alert(`Employee ID ${employee.employeeId} already have a locker.`);
+      console.error('Error adding user:', error);
+      alert('Error adding user. Please try again.');
     }
   };
 
@@ -141,7 +155,7 @@ const Form = () => {
             <div className="form-group">
               <label>Full Name</label>
               <input
-                type="text"
+                type="email"
                 name="fullName"
                 value={employee.fullName}
                 onChange={handleChange}
@@ -165,7 +179,7 @@ const Form = () => {
             <div className="form-group">
               <label>Department</label>
               <input
-                type="text"
+                type="email"
                 name="department"
                 value={employee.department}
                 onChange={handleChange}

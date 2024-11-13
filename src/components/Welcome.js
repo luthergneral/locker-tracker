@@ -56,7 +56,6 @@ const Welcome = ({ user }) => {
               onChange={handlePasswordChange}
             />
           </form>
-          <p><a href="/#">Forgot password</a></p>
           <button type="button" name="login" onClick={handleLogin}>
               Login
             </button>

@@ -25,6 +25,11 @@
   cursor: pointer;
 }
 
+.locker.occupied {
+  background-color: purple;
+  color: white;
+}
+
 .locker:hover {
   background-color: #972bc2;
 }
